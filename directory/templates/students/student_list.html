@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Student Directory</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #4361ee;
+            --primary-dark: #3a56d4;
+            --secondary: #3f37c9;
+            --accent: #4895ef;
+            --light: #f8f9fa;
+            --dark: #212529;
+            --gray: #6c757d;
+            --light-gray: #e9ecef;
+            --success: #4cc9f0;
+            --white: #ffffff;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            min-height: 100vh;
+            color: var(--dark);
+            line-height: 1.6;
+        }
+
+        header {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            padding: 2rem 1rem;
+            color: var(--white);
+            text-align: center;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        header::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: var(--accent);
+        }
+
+        header h1 {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+
+        .header-subtitle {
+            font-weight: 300;
+            opacity: 0.9;
+        }
+
+        main {
+            max-width: 1200px;
+            margin: 2rem auto;
+            padding: 0 1rem;
+        }
+
+        .search-container {
+            background: var(--white);
+            padding: 2rem;
+            border-radius: 12px;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+            margin-bottom: 2rem;
+        }
+
+        form {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            align-items: end;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+        }
+
+        label {
+            font-size: 0.9rem;
+            color: var(--gray);
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+        }
+
+        input[type="text"] {
+            padding: 0.8rem 1rem;
+            border-radius: 8px;
+            border: 2px solid var(--light-gray);
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            width: 100%;
+        }
+
+        input[type="text"]:focus {
+            border-color: var(--primary);
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(67, 97, 238, 0.2);
+        }
+
+        button {
+            background: linear-gradient(to right, var(--primary), var(--accent));
+            color: var(--white);
+            padding: 0.8rem 1.5rem;
+            font-size: 1rem;
+            font-weight: 500;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            height: fit-content;
+        }
+
+        button:hover {
+            background: linear-gradient(to right, var(--primary-dark), var(--primary));
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+        }
+
+        .results-container {
+            background: var(--white);
+            border-radius: 12px;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+            overflow: hidden;
+        }
+
+        .results-header {
+            padding: 1rem 1.5rem;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            color: var(--white);
+            display: grid;
+            grid-template-columns: 2fr 1fr 1fr 1fr;
+            font-weight: 500;
+        }
+
+        ul {
+            list-style: none;
+        }
+
+        li {
+            padding: 1.2rem 1.5rem;
+            display: grid;
+            grid-template-columns: 2fr 1fr 1fr 1fr;
+            align-items: center;
+            transition: background 0.2s ease;
+            animation: fadeIn 0.3s ease forwards;
+        }
+
+        li:nth-child(even) {
+            background-color: rgba(248, 249, 250, 0.5);
+        }
+
+        li:hover {
+            background-color: rgba(67, 97, 238, 0.05);
+        }
+
+        li strong {
+            color: var(--primary);
+            font-weight: 600;
+        }
+
+        li span {
+            color: var(--gray);
+            font-size: 0.95rem;
+        }
+
+        .no-results {
+            padding: 2rem;
+            text-align: center;
+            color: var(--gray);
+        }
+
+        @media (max-width: 768px) {
+            form {
+                grid-template-columns: 1fr;
+            }
+
+            .results-header, li {
+                grid-template-columns: 1fr;
+                gap: 0.5rem;
+            }
+
+            .results-header {
+                display: none;
+            }
+
+            li {
+                padding: 1.5rem;
+                border-bottom: 1px solid var(--light-gray);
+            }
+
+            li::before {
+                content: attr(data-label);
+                font-weight: 600;
+                color: var(--primary);
+                margin-right: 0.5rem;
+            }
+
+            li span {
+                display: inline-block;
+                margin-left: 0;
+            }
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        li:nth-child(1) { animation-delay: 0.1s; }
+        li:nth-child(2) { animation-delay: 0.2s; }
+        li:nth-child(3) { animation-delay: 0.3s; }
+        li:nth-child(4) { animation-delay: 0.4s; }
+        li:nth-child(5) { animation-delay: 0.5s; }
+    </style>
+</head>
+<body>
+<header>
+    <h1>Student Directory</h1>
+    <p class="header-subtitle">Find and manage student records</p>
+</header>
+<main>
+    <div class="search-container">
+        <form method="get" action="">
+            
+            <div class="form-group">
+                <label for="search">Search by name or roll number</label>
+                <input type="text" id="search" name="q" placeholder="e.g. John Doe or 2023001" value="{{ request.GET.q|default:'' }}">
+            </div>
+            <div class="form-group">
+                <label for="semester">Filter by semester</label>
+                <input type="text" id="semester" name="semester" placeholder="e.g. 3 or 4" value="{{ request.GET.semester|default:'' }}">
+            </div>
+            <div class="form-group">
+                <label for="faculty">Filter by faculty</label>
+                <input type="text" id="faculty" name="faculty" placeholder="e.g. Computer Science" value="{{ request.GET.faculty|default:'' }}">
+            </div>
+            <div class="form-group">
+                <label for="section">Filter by section</label>
+                <input type="text" id="section" name="section" placeholder="e.g. A or B" value="{{ request.GET.section|default:'' }}">
+            </div>
+            <button type="submit">Search</button>
+        </form>
+    </div>
+
+    <div class="results-container">
+        <div class="results-header">
+            <div>Name</div>
+            <div>Roll Number</div>
+            <div>Semester</div>
+            <div>Faculty</div>
+        </div>
+        <ul>
+            {% for student in students %}
+                <li data-label="Name: {{ student.name }} | Roll: {{ student.roll_number }} | Semester: {{ student.semester }} | Faculty: {{ student.faculty }}">
+                    <strong>{{ student.name }}</strong>
+                    <span>{{ student.roll_number }}</span>
+                    <span>{{ student.semester }}</span>
+                    <span>{{ student.faculty }}</span>
+                </li>
+            {% empty %}
+                <li class="no-results">No students found matching your criteria.</li>
+            {% endfor %}
+        </ul>
+    </div>
+</main>
+</body>
+</html>
